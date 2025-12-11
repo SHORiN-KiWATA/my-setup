@@ -49,6 +49,7 @@ setup_new_user(){
         while true; do
                 # -s代表不回显
                 read -p "Please enter password for $username: " -s passwd
+                # -s导致回车的新行字符也被隐藏了，所以echo换个行
                 echo " "
                 read -p "Please enter password again: " -s passwd_confirm
                 echo " "
