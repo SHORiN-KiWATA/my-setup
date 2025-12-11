@@ -59,7 +59,7 @@ check_network(){
 if_is_complete(){
 	log_info "Checking if $PROGRESS_NAME is completed ..."
 
-	if cat "$STATUS_FILE_NAME" | grep "$PROGRESS_NAME"; then
+	if grep -q "$PROGRESS_NAME" "$STATUS_FILE_NAME"; then
 		log_warn "Progress $PROGRESS_NAME has completed."
 		return 0
 	else
@@ -68,7 +68,7 @@ if_is_complete(){
 	
 }
 is_complete(){
-	if ! grep "$PROGRESS_NAME" "$STATUS_FILE_NAME"; then
+	if ! grep -q "$PROGRESS_NAME" "$STATUS_FILE_NAME"; then
 		echo "$PROGRESS_NAME" >> "$STATUS_FILE_NAME"
 	fi
 }
