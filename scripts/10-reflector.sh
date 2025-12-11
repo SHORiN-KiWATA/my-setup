@@ -8,8 +8,10 @@ update_mirrorlist( ){
         pacman -Syu --needed --noconfirm reflector
         # 用timedatectl显示时区
         if [ "$CURRENT_TZ" == "Asia/Shanghai" ];then 
+                log_warn "Asia/Shanghai detected, skipping reflector mirror setting...."
                 true # 检测到时区为上海则跳过reflector设置镜像源的步骤
         else
+                log_info "Refreshing mirrorlist....."
                 reflector $ARGS -c $COUNTRY
         fi
 }
