@@ -68,5 +68,7 @@ if_is_complete(){
 	
 }
 is_complete(){
-	echo "$PROGRESS_NAME" >> "$STATUS_FILE_NAME"
+	if ! grep "$PROGRESS_NAME" "$STATUS_FILE_NAME"; then
+		echo "$PROGRESS_NAME" >> "$STATUS_FILE_NAME"
+	fi
 }
