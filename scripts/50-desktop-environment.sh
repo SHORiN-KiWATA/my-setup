@@ -1,4 +1,4 @@
-PROGRESS_NAME="install_desktop_environment"
+
 
 # 0. 如果检测到有多个普通用户的话，弹出选择框问要给哪个用户安装
 # 1. xdg user dirs
@@ -6,8 +6,14 @@ PROGRESS_NAME="install_desktop_environment"
 # 3. 安装桌面环境需要的所有软件包
 # 4. 复制配置文件
 
-TARGET_USER=$(awk -F: '$3 >= 1000 && $3 != 65534 {print $1}' /etc/passwd | head -n 1)
 
+#===========工具===============
+cleanup_temp_sudo() {
+    if [ -f /etc/sudoers.d/99_temp_install ]; then
+        rm -f /etc/sudoers.d/99_temp_install
+        echo "Safety cleanup: Temporary sudo permissions removed."
+    fi
+}
 create_xdg_user_dirs(){
         pacman -Syu --noconfirm xdg-user-dirs
 }
@@ -49,9 +55,19 @@ get_applist(){
                 echo "$TARGET_USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/99_temp_install
                 #逐一安装aur包
                 for pkg in "${aur_list[@]}"; do
-                        log_info "Installing AUR package: $pkg ..."
-                        sudo -u "$TARGET_USER" yay -Syu --needed --noconfirm --noanswerclean --noansweredit --noanswerdiff --noanswerupgrade "$pkg"
-                        log_info "$pkg installed."
+                
+                        local tried_times=1
+                        local max_tried_times=100
+                        while [ "$tred_times" -le "$max_tried_times" ]; do
+                                log_info "Installing AUR package: $pkg ..."
+                                if sudo -u "$TARGET_USER" yay -Syu --needed --noconfirm --noanswerclean --noansweredit --noanswerdiff --noanswerupgrade "$pkg"; then
+                                        log_info "$pkg installed."
+                                        break
+                                else
+                                        log_info "$pkg installation failed, retrying...."
+                                        ((tried_times++))
+                                fi
+                        done
                 done
                 #销毁通行证
                 log_info "Deleting passport...."
@@ -64,5 +80,16 @@ get_applist(){
                 done
         fi
 }
+#==============执行================
+PROGRESS_NAME="install_desktop_environment"
+TARGET_USER=$(awk -F: '$3 >= 1000 && $3 != 65534 {print $1}' /etc/passwd | head -n 1)
+if ! if_is_complete; then
+        get_applist "niri-applist.txt"
+fi
+if echo "$?"; then
+        is_complete
+fi
 
-get_applist "niri-applist.txt"
+
+# 退出、中断、中止后自动触发清理临时sudo文件
+trap cleanup_temp_sudo EXIT SIGINT SIGTERM
