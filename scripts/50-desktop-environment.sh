@@ -64,7 +64,7 @@ get_applist(){
                                         log_info "$pkg installed."
                                         break
                                 else
-                                        log_info "$pkg installation failed, retrying...."
+                                        log_info "$pkg installation failed, retrying, tried times: $tried_times ...."
                                         ((tried_times++))
                                 fi
                         done
