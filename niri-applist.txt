@@ -12,6 +12,7 @@ niri
 xwayland-satellite
 fuzzel
 kitty
+xdg-desktop-portal-gnome
 #其他
 fastfetch
 firefox

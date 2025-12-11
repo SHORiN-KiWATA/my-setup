@@ -94,10 +94,10 @@ deploy_dotfiles(){
         git clone https://github.com/SHORiN-KiWATA/ShorinArchExperience-ArchlinuxGuide.git
         local dotfile_path="ShorinArchExperience-ArchlinuxGuide"
         mkdir -p /home/$TARGET_USER/Pictures/Wallpapers
-        cp -rfv $dotfile_path/wallpapers/* /home/$TARGET_USER/Pictures/Wallpapers
-        cp -rfv $dotfile_path/dotfiles/* /home/$TARGET_USER
-        chown -R /home/$TARGET_USER/Pictures/Wallpapers
-        chown -R /home/$TARGET_USER
+        cp -afv $dotfile_path/wallpapers/* /home/$TARGET_USER/Pictures/Wallpapers
+        cp -afv $dotfile_path/dotfiles/. /home/$TARGET_USER
+        chown -R "$TARGET_USER" /home/$TARGET_USER/Pictures/Wallpapers
+        chown -R "$TARGET_USER" /home/$TARGET_USER
 }
 #==============执行================
 PROGRESS_NAME="install_desktop_environment"
