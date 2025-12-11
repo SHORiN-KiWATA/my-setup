@@ -58,14 +58,16 @@ check_network(){
 }
 if_is_complete(){
 	log_info "Checking if $PROGRESS_NAME is completed ..."
+	
 	if cat "$STATUS_FILE_NAME" | grep "$PROGRESS_NAME"; then
 		return 0
 	else
+		log_warn "Progress $PROGRESS_NAME has completed."
 		return 1
 	fi
 	
 }
 is_complete(){
 	echo "$PROGRESS_NAME" >> "$STATUS_FILE_NAME"
-	log_info "Progress $PROGRESS_NAME has completed."
+	log_warn "Progress $PROGRESS_NAME has completed."
 }
