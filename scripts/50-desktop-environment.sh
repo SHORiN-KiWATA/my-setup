@@ -69,7 +69,7 @@ get_applist(){
 
                                 
                                 trap "SKIP_CURRENT=1" SIGINT
-                                if [ "$skip_current" == 1 ]; then
+                                if [ "$SKIP_CURRENT" == 1 ]; then
                                 break
                                 fi
 
