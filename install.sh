@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # 断点重续状态的文件
-STATUS_FILE_NAME=".setup_progress"
+
 #=======导入工具集=======
 echo "Sourcing tools..."
 source utils.sh
@@ -16,6 +16,7 @@ else
 fi
 #=========创建进度文件=============
 log_info "Creating progress file..."
+STATUS_FILE_NAME=".setup_progress"
 touch ${STATUS_FILE_NAME}
 #=======检查网络连接=======
 echo "Checking Network connection..."
