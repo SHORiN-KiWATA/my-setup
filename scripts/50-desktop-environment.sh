@@ -14,9 +14,10 @@ create_xdg_user_dirs(){
 
 get_applist(){
         local applist_path="$1"
-        local pacman_list=""
-        local aur_list=""
-        local flatpak_list=""
+        # 用括号定义空数组
+        local pacman_list=()
+        local aur_list=()
+        local flatpak_list=()
         # read循环读取done后面导入的文件放入line变量，-r原样读取，不转义。
         log_info "Processing pkg list...."
         while read -r line; do
@@ -36,15 +37,16 @@ get_applist(){
                 fi
         done < "$applist_path"
         log_info "Pkg list complete; installing pkgs...."
-        if [ ! -z "$pacman_list" ]; then 
+        #如果数组中值的个数大于等于零，#代表列出数组中值的数量。
+        if [ ${#pacman_list[@]} -gt 0 ]; then 
                 #将数组变量里的每一个值逐个传给pacman，类似"vim" "firefox" "mission-center"这样
                 pacman -Syu --needed --noconfirm "${pacman_list[@]}"
         fi
-        if [ ! -z "$aur_list" ]; then 
+        if [ ${#aur_list[@]} -gt 0 ]; then 
                 yay -Syu --needed --noconfirm --noanswerclean --noansweredit --noanswerdiff --noanswerupgrade "${aur_list[@]}"
         fi
-        if [ ! -z "$flatpak_list" ]; then
-                flatpak install "${flatpak[@]}"
+        if [ ${#flatpak_list[@]} -gt 0 ]; then
+                flatpak install -y "${flatpak_list[@]}"
         fi
 }
 
