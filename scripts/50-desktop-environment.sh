@@ -91,7 +91,7 @@ install_applist(){
 }
 
 deploy_dotfiles(){
-        git clone https://github.com/SHORiN-KiWATA/ShorinArchExperience-ArchlinuxGuide.git
+        git clone --depth 1 https://github.com/SHORiN-KiWATA/ShorinArchExperience-ArchlinuxGuide.git 
         local dotfile_path="ShorinArchExperience-ArchlinuxGuide"
         mkdir -p /home/$TARGET_USER/Pictures/Wallpapers
         cp -afv $dotfile_path/wallpapers/* /home/$TARGET_USER/Pictures/Wallpapers
