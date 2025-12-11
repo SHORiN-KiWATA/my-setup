@@ -50,8 +50,6 @@ if ! if_is_complete; then
                         creat_snapper_config "root" "/"
                         log_info "root subvolume snapper setup completed"
                         creat_snapshot_of "root" "Before Setup"
-                else
-                        return 1
                 fi
                 #检测是否存在home目录的子卷，存在的话创建快照配置
                 HOME_SUBVOL=$(find_subvol_in_fstab "/home")
@@ -59,8 +57,6 @@ if ! if_is_complete; then
                         creat_snapper_config "home" "/home"
                         log_info "home subvolume snapper setup completed"
                         creat_snapshot_of "home" "Before Setup"
-                else
-                        return 1
                 fi
                 is_complete
         fi
