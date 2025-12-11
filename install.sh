@@ -17,7 +17,9 @@ fi
 #=========创建进度文件=============
 log_info "Creating progress file..."
 STATUS_FILE_NAME=".setup_progress"
-touch ${STATUS_FILE_NAME}
+if [ ! -f "$STATUS_FILE_NAME" ]; then
+        touch ${STATUS_FILE_NAME}
+fi
 #=======检查网络连接=======
 echo "Checking Network connection..."
 if ! check_network; then
