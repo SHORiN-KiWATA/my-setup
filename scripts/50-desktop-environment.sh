@@ -51,7 +51,7 @@ get_applist(){
                 pacman -Syu --needed --noconfirm "${pacman_list[@]}"
         fi
 
-        # 循环安装aur包，失败则重试，可以ctrl+c跳过
+        # 循环安装aur包，失败则重试
         
         if [ ${#aur_list[@]} -gt 0 ]; then 
                 
@@ -60,31 +60,24 @@ get_applist(){
                 echo "$TARGET_USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/99_temp_install
                 #逐一安装aur包
                 for pkg in "${aur_list[@]}"; do
-                
+                        #重试机制
                         local tried_times=1
-                        local max_tried_times=100
-                        SKIP_CURRENT=0
+                        local max_tried_times=3
                         while [ "$tried_times" -le "$max_tried_times" ]; do
-                                
-
-                                
-                                trap "SKIP_CURRENT=1" SIGINT
-                                if [ "$SKIP_CURRENT" == 1 ]; then
-                                break
-                                fi
 
                                 log_info "Installing AUR package: $pkg ..."
+                                # 安装成功的话跳出此次重试循环
                                 if sudo -u "$TARGET_USER" yay -Syu --needed --noconfirm --noanswerclean --noansweredit --noanswerdiff --noanswerupgrade "$pkg"; then
                                         log_info "$pkg installed."
-                                        
                                         break
+                                # 安装失败的话尝试计数加1，再次尝试
                                 else
                                         log_info "$pkg installation failed, retrying, tried times: $tried_times ...."
                                         ((tried_times++))
                                 fi
                         done
                 done
-                #销毁通行证
+                #全部安装完成后销毁通行证
                 log_info "Deleting passport...."
                 rm -f /etc/sudoers.d/99_temp_install
         fi
