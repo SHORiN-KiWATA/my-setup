@@ -14,7 +14,7 @@ if ! if_is_complete; then
                 log_info "Enabling [multilib] ..."
                 # $代表行尾
                 sed -i "/\[multilib\]/,/Include/"'s/#//' /etc/pacman.conf
-                pacman -Sy
+                pacman -Syu --noconfirm
                 is_complete
         fi
 fi

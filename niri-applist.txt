@@ -49,7 +49,7 @@ qt5ct
 nwg-look
 swayosd
 #======aur包=========
-AUR:waybar-niri-taskbar-git
+AUR:waybar-niri-taskbar
 AUR:waybar-module-pacman-updates-git
 AUR:wlogout
 AUR:matugen

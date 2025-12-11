@@ -7,7 +7,7 @@ if ! if_is_complete; then
         if grep "\[archlinuxcn\]" /etc/pacman.conf; then
                 log_info "Archlinuxcn is already set."
                 if ! has_cmd "yay"; then
-                        pacman -Syu yay
+                        pacman -Syu --noconfirm yay
                 fi
                 is_complete
 
