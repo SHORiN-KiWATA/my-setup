@@ -39,7 +39,8 @@ setup_new_user(){
                 if [[ ! "$username_confirm" =~ ^[yY] ]]; then 
                         continue
                 fi
-
+                log_info "Adding $username ..."
+                useradd -m -G wheel -s /bin/bash "$username"
                 break
         
         done
@@ -72,10 +73,6 @@ setup_new_user(){
         if ! has_cmd "sudo"; then
                 pacman -Syu --noconfirm sudo
         fi
-
-        # 添加组
-        log_info "Adding $username to group wheel..."
-        useradd -m -G wheel -s /bin/bash "$username"
         
         # 配置sudo权限
         log_info "Enabling sudo permission....."
