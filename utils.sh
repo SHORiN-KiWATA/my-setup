@@ -60,9 +60,9 @@ if_is_complete(){
 	log_info "Checking if $PROGRESS_NAME is completed ..."
 
 	if cat "$STATUS_FILE_NAME" | grep "$PROGRESS_NAME"; then
+		log_warn "Progress $PROGRESS_NAME has completed."
 		return 0
 	else
-		log_warn "Progress $PROGRESS_NAME has completed."
 		return 1
 	fi
 	
