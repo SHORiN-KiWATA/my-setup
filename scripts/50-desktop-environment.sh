@@ -24,6 +24,8 @@ get_applist(){
         local pacman_list=()
         local aur_list=()
         local flatpak_list=()
+        
+        
         # read循环读取done后面导入的文件放入line变量，-r原样读取，不转义。
         log_info "Processing pkg list...."
         while read -r line; do
@@ -49,7 +51,10 @@ get_applist(){
                 pacman -Syu --needed --noconfirm "${pacman_list[@]}"
         fi
 
+        # 循环安装aur包，失败则重试，可以ctrl+c跳过
+        
         if [ ${#aur_list[@]} -gt 0 ]; then 
+                trap "skip_current=1" SIGINT
                 #临时免密
                 log_info "Creating passport..."
                 echo "$TARGET_USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/99_temp_install
@@ -58,10 +63,19 @@ get_applist(){
                 
                         local tried_times=1
                         local max_tried_times=100
+                        
                         while [ "$tried_times" -le "$max_tried_times" ]; do
+                                
+
+                                local skip_current=0
+                                if [ "$skip_current" == 1 ]; then
+                                break
+                                fi
+
                                 log_info "Installing AUR package: $pkg ..."
                                 if sudo -u "$TARGET_USER" yay -Syu --needed --noconfirm --noanswerclean --noansweredit --noanswerdiff --noanswerupgrade "$pkg"; then
                                         log_info "$pkg installed."
+                                        
                                         break
                                 else
                                         log_info "$pkg installation failed, retrying, tried times: $tried_times ...."
