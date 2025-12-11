@@ -58,7 +58,7 @@ get_applist(){
                 
                         local tried_times=1
                         local max_tried_times=100
-                        while [ "$tred_times" -le "$max_tried_times" ]; do
+                        while [ "$tried_times" -le "$max_tried_times" ]; do
                                 log_info "Installing AUR package: $pkg ..."
                                 if sudo -u "$TARGET_USER" yay -Syu --needed --noconfirm --noanswerclean --noansweredit --noanswerdiff --noanswerupgrade "$pkg"; then
                                         log_info "$pkg installed."
