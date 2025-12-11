@@ -56,3 +56,11 @@ check_network(){
 		return 1
 	fi
 }
+if_is_complete(){
+	log_info "Checking if $PROGRESS_NAME is completed ..."
+	cat "$STATUS_FILE_NAME" | grep "$PROGRESS_NAME"
+}
+is_complete(){
+	echo "$PROGRESS_NAME" >> "$STATUS_FILE_NAME"
+	log_info "Progress $PROGRESS_NAME has completed."
+}
