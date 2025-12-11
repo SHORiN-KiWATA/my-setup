@@ -63,7 +63,7 @@ setup_new_user(){
                         log_warn "Passwords do not match."
                         continue
                 fi
-                
+                echo "$passwd" | passwd --stdin $username
                 break
         done
 

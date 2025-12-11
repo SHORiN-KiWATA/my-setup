@@ -6,7 +6,7 @@ PROGRESS_NAME="install_desktop_environment"
 # 3. 安装桌面环境需要的所有软件包
 # 4. 复制配置文件
 
-
+TARGET_USER=$(awk -F: '$3 >= 1000 && $3 != 65534 {print $1}' /etc/passwd | head -n 1)
 
 create_xdg_user_dirs(){
         pacman -Syu --noconfirm xdg-user-dirs
@@ -42,11 +42,26 @@ get_applist(){
                 #将数组变量里的每一个值逐个传给pacman，类似"vim" "firefox" "mission-center"这样
                 pacman -Syu --needed --noconfirm "${pacman_list[@]}"
         fi
+
         if [ ${#aur_list[@]} -gt 0 ]; then 
-                yay -Syu --needed --noconfirm --noanswerclean --noansweredit --noanswerdiff --noanswerupgrade "${aur_list[@]}"
+                #临时免密
+                log_info "Creating passport..."
+                echo "$TARGET_USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/99_temp_install
+                #逐一安装aur包
+                for pkg in "${aur_list[@]}"; do
+                        log_info "Installing AUR package: $pkg ..."
+                        sudo -u "$TARGET_USER" yay -Syu --needed --noconfirm --noanswerclean --noansweredit --noanswerdiff --noanswerupgrade "$pkg"
+                        log_info "$pkg installed."
+                done
+                #销毁通行证
+                log_info "Deleting passport...."
+                rm -f /etc/sudoers.d/99_temp_install
         fi
         if [ ${#flatpak_list[@]} -gt 0 ]; then
-                flatpak install -y "${flatpak_list[@]}"
+                for pkg in "${flatpak_list[@]}"; do
+                        log_info "Installing flatpak package: $pkg ..."
+                        flatpak install -y "$pkg"
+                done
         fi
 }
 
