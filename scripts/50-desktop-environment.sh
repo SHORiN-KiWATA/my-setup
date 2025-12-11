@@ -48,4 +48,4 @@ get_applist(){
         fi
 }
 
-get_applist
+get_applist "niri-applist.txt"
