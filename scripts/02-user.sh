@@ -25,7 +25,7 @@ setup_new_user(){
                 # =~是正则匹配符号，只能在双方括号内使用，如果左边的内容匹配右边的内容则0
                 # 如果用户名为空或者包含空格则报错
                 if [[ -z "$username" || "$username" =~ " " ]]; then
-                        log_error "Invalid username."
+                        log_warn "Invalid username."
                         # 回到循环的开头
                         continue
                 fi
@@ -34,9 +34,8 @@ setup_new_user(){
                 # 让用户确认，把输入内容写入变量，再判断是否为Y，是的话则break
                 # ${variable:-Y} 如果变量值是空的则使用Y作为值
                 
-                read -p "Confirm username as ${username}? [Y/n]: " username_confirm
+                read -p "Confirm username as ${username}? [y/n]: " username_confirm
                 # ^代表开头，[...]是字符集，
-                username_confirm=${username_confirm:-Y}
                 if [[ ! "$username_confirm" =~ ^[yY] ]]; then 
                         continue
                 fi
@@ -51,12 +50,19 @@ setup_new_user(){
                 # -s代表不回显
                 read -p "Please enter password for $username: " -s passwd
 
+                read -p "Please enter password again: " -s passwd_confirm
+
                 #检查是否为空，是否包含空格
                 if [[ -z "$passwd" || "$passwd" =~ " " ]]; then
-                        log_error "Invalid password."
+                        log_warn "Invalid password."
                         continue
                 fi
 
+                if [ "$passwd" -ne "$passwd_confirm" ]; then
+                        log_warn "Passwords do not match."
+                        continue
+                fi
+                
                 break
         done
 
