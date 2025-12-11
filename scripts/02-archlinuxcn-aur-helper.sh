@@ -25,7 +25,7 @@ EOT
         
                 pacman -Sy --noconfirm archlinuxcn-keyring 
                 if ! has_cmd "yay"; then
-                        pacman -Syu yay
+                        pacman -Syu --noconfirm yay
                 fi
                 log_info "Archlinuxcn enabled."
                 is_complete

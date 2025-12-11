@@ -49,7 +49,7 @@ setup_new_user(){
         while true; do
                 # -s代表不回显
                 read -p "Please enter password for $username: " -s passwd
-
+                echo "Remenbered.."
                 read -p "Please enter password again: " -s passwd_confirm
 
                 #检查是否为空，是否包含空格
@@ -58,7 +58,7 @@ setup_new_user(){
                         continue
                 fi
 
-                if [ "$passwd" -ne "$passwd_confirm" ]; then
+                if [ ! "$passwd" == "$passwd_confirm" ]; then
                         log_warn "Passwords do not match."
                         continue
                 fi
