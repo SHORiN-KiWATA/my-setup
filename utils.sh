@@ -58,8 +58,7 @@ check_network(){
 }
 if_is_complete(){
 	log_info "Checking if $PROGRESS_NAME is completed ..."
-	local check_cmd='cat "$STATUS_FILE_NAME" | grep "$PROGRESS_NAME"'
-	if $check_cmd; then
+	if cat "$STATUS_FILE_NAME" | grep "$PROGRESS_NAME"; then
 		return 0
 	else
 		return 1
