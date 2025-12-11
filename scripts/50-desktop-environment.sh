@@ -16,9 +16,10 @@ cleanup_temp_sudo() {
 }
 create_xdg_user_dirs(){
         pacman -Syu --noconfirm xdg-user-dirs
+        sudo -u shorin xdg-user-dirs-update
 }
 
-get_applist(){
+install_applist(){
         local applist_path="$1"
         # 用括号定义空数组
         local pacman_list=()
@@ -88,15 +89,25 @@ get_applist(){
                 done
         fi
 }
+
+deploy_dotfiles(){
+        git clone https://github.com/SHORiN-KiWATA/ShorinArchExperience-ArchlinuxGuide.git
+        local dotfile_path="ShorinArchExperience-ArchlinuxGuide"
+        mkdir -p /home/$TARGET_USER/Pictures/Wallpapers
+        cp -rfv $dotfile_path/wallpapers/* /home/$TARGET_USER/Pictures/Wallpapers
+        cp -rfv $dotfile_path/dotfiles/* /home/$TARGET_USER
+        chown -R /home/$TARGET_USER/Pictures/Wallpapers
+        chown -R /home/$TARGET_USER
+}
 #==============执行================
 PROGRESS_NAME="install_desktop_environment"
 TARGET_USER=$(awk -F: '$3 >= 1000 && $3 != 65534 {print $1}' /etc/passwd | head -n 1)
 if ! if_is_complete; then
-        get_applist "niri-applist.txt"
+        install_applist "niri-applist.txt"
+        create_xdg_user_dirs
+        deploy_dotfiles
 fi
-if echo "$?"; then
-        is_complete
-fi
+
 
 
 # 退出、中断、中止后自动触发清理临时sudo文件
