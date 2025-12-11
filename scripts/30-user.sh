@@ -49,9 +49,9 @@ setup_new_user(){
         while true; do
                 # -s代表不回显
                 read -p "Please enter password for $username: " -s passwd
-                echo "Remenbered.."
+                echo " "
                 read -p "Please enter password again: " -s passwd_confirm
-
+                echo " "
                 #检查是否为空，是否包含空格
                 if [[ -z "$passwd" || "$passwd" =~ " " ]]; then
                         log_warn "Invalid password."
