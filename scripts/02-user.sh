@@ -33,9 +33,10 @@ setup_new_user(){
                 
                 # 让用户确认，把输入内容写入变量，再判断是否为Y，是的话则break
                 # ${variable:-Y} 如果变量值是空的则使用Y作为值
-                local username_confirm=${username_confirm:-Y}
+                
                 read -p "Confirm username as ${username}? [Y/n]: " username_confirm
                 # ^代表开头，[...]是字符集，
+                username_confirm=${username_confirm:-Y}
                 if [[ ! "$username_confirm" =~ ^[yY] ]]; then 
                         continue
                 fi
@@ -47,12 +48,11 @@ setup_new_user(){
 
         # 设置密码
         while true; do
-                echo "Please enter password for $username"
                 # -s代表不回显
-                read -s passwd
+                read -p "Please enter password for $username: " -s passwd
 
                 #检查是否为空，是否包含空格
-                if [[-z "$passwd" || "$passwd" =~ " " ]]; then
+                if [[ -z "$passwd" || "$passwd" =~ " " ]]; then
                         log_error "Invalid password."
                         continue
                 fi
