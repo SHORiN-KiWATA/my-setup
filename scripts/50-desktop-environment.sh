@@ -54,7 +54,7 @@ get_applist(){
         # 循环安装aur包，失败则重试，可以ctrl+c跳过
         
         if [ ${#aur_list[@]} -gt 0 ]; then 
-                trap "skip_current=1" SIGINT
+                
                 #临时免密
                 log_info "Creating passport..."
                 echo "$TARGET_USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/99_temp_install
@@ -63,11 +63,12 @@ get_applist(){
                 
                         local tried_times=1
                         local max_tried_times=100
-                        
+                        SKIP_CURRENT=0
                         while [ "$tried_times" -le "$max_tried_times" ]; do
                                 
 
-                                local skip_current=0
+                                
+                                trap "SKIP_CURRENT=1" SIGINT
                                 if [ "$skip_current" == 1 ]; then
                                 break
                                 fi
