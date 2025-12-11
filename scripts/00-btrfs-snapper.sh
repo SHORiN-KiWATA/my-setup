@@ -63,8 +63,6 @@ if ! if_is_complete; then
                         return 1
                 fi
                 is_complete
-        else
-                return 1
         fi
 fi
 
